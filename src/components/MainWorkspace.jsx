@@ -127,7 +127,7 @@ function MainWorkspace({ data, role }) {
               {data.risks ? data.risks.map((risk, idx) => (
                 <div key={idx} style={{ 
                   border: '1px solid var(--border-light)', 
-                  borderLeft: \`4px solid \${getRiskColor(risk.severity)}\`,
+                  borderLeft: `4px solid ${getRiskColor(risk.severity)}`,
                   padding: '1rem', 
                   marginBottom: '1rem',
                   backgroundColor: '#fff'
@@ -138,7 +138,7 @@ function MainWorkspace({ data, role }) {
                       color: getRiskColor(risk.severity), 
                       fontWeight: 'bold', 
                       fontSize: '0.8rem',
-                      border: \`1px solid \${getRiskColor(risk.severity)}\`,
+                      border: `1px solid ${getRiskColor(risk.severity)}`,
                       padding: '0.1rem 0.4rem',
                       borderRadius: '2px'
                     }}>{risk.severity} Risk</span>

@@ -28,7 +28,7 @@ function App() {
         : '/api';
       
       // Note: for Firebase hosting rewrites, /api/analyze maps to analyze function
-      const endpoint = window.location.hostname === 'localhost' ? \`\${baseUrl}/analyze\` : '/api/analyze';
+      const endpoint = window.location.hostname === 'localhost' ? `${baseUrl}/analyze` : '/api/analyze';
 
       const response = await fetch(endpoint, {
         method: 'POST',
