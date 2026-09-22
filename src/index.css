@@ -1,0 +1,72 @@
+:root {
+  --font-main: "Times New Roman", Times, serif;
+  --font-mono: "Courier New", Courier, monospace;
+  
+  --bg-color: #F7F3E9;
+  --text-color: #1B1B2F;
+  --accent-color: #7A1F2B;
+  
+  --risk-high: #B03A2E;
+  --risk-medium: #B8860B;
+  --risk-low: #2E7D46;
+  
+  --border-light: rgba(27, 27, 47, 0.1);
+  --border-strong: rgba(27, 27, 47, 0.3);
+}
+
+body {
+  font-family: var(--font-main);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  margin-top: 0;
+}
+
+button {
+  font-family: var(--font-main);
+  background: var(--bg-color);
+  color: var(--text-color);
+  border: 1px solid var(--border-strong);
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+button:hover {
+  background: var(--text-color);
+  color: var(--bg-color);
+}
+
+.app-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.app-header {
+  border-bottom: 2px solid var(--accent-color);
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.app-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: var(--accent-color);
+}
+
+.app-header p {
+  margin: 0;
+  font-size: 0.9rem;
+  font-style: italic;
+  color: var(--text-color);
+}
