@@ -166,6 +166,7 @@ Output MUST be valid JSON matching this schema:
     });
 
     const parsedData = parseLLMJSON(groqResponse);
+    parsedData.originalText = docText;
 
     res.json(parsedData);
   } catch (error) {
