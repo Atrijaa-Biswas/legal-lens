@@ -64,6 +64,10 @@ async function callGroq(messages, options = {}) {
           event: "Notice of Non-Renewal",
           description: "Must notify landlord if you plan to move out."
         }
+      ],
+      nextSteps: [
+        "Review the late fee penalty clause and ensure you can pay rent by the 5th.",
+        "Set a calendar reminder for 30 days before the lease ends to give notice."
       ]
     });
   }

@@ -153,7 +153,8 @@ Output MUST be valid JSON matching this schema:
       "event": "string",
       "description": "string"
     }
-  ]
+  ],
+  "nextSteps": ["string (recommended next steps for the ${role})"]
 }`;
     
     const messages = [

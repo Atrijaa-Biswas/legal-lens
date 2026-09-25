@@ -1,70 +1,64 @@
-# LegalLens
+# LegalLens ⚖️🔍
 
-**PromptWars: Virtual — Challenge 2 ("Build with AI") Submission**
+LegalLens is an AI-powered legal document analyzer designed to instantly review, summarize, and extract critical information from legal documents. Whether you're a tenant looking at a lease, an employee reviewing a contract, or a lawyer preparing for a case, LegalLens provides deep insights with a privacy-first approach.
 
-LegalLens is an AI-powered legal document assistant that simplifies complex legal texts, highlights risks, extracts timelines, and answers questions — all customized to your specific role in the agreement.
+## 🌟 Features
 
-## 1. Chosen Vertical / Persona
-**Primary Persona:** Tenant (Real Estate)
-**Why:** Tenants often face dense, complex lease agreements where the power dynamic heavily favors the landlord. The language is confusing, risks are buried, and timelines for renewals or penalties are easily missed. This tool specifically flags risks and obligations from the *tenant's* perspective to balance that information asymmetry. While the tool defaults to Tenant, it supports other personas (Landlord, Employee, Freelancer) by dynamically branching the AI analysis based on the selected role.
+- **Instant Document Analysis**: Upload PDFs, Word documents, text files, or images. The app uses advanced AI (via Groq) to analyze the content instantly.
+- **Role-Based Insights**: Tailors the analysis based on your selected role (e.g., Tenant, Landlord, Employee, Employer, Lawyer).
+- **Multi-Level Summaries**: Read summaries in *Simple*, *Standard*, or *Detailed* language based on your comfort level.
+- **Risk Identification**: Automatically flags high, medium, and low-risk clauses, explaining what they mean and why they matter to your specific role.
+- **Interactive Q&A**: Chat directly with your document. Ask specific questions and get answers cited directly from the text.
+- **Timeline & Deadlines**: Extracts important dates and obligations. You can instantly download them as a `.ics` calendar file to add to your personal calendar.
+- **Recommended Next Steps**: Provides actionable advice on what to do next based on the document's contents.
+- **Export Reports**: Generate and download a comprehensive text report of the analysis to share or save for your records.
+- **Privacy First**: Documents are processed entirely in-memory and are **never stored** or saved to a database.
 
-## 2. Approach and Logic
-- **Role-based Branching:** The user selects their role before analysis. This role is passed to the LLM (Groq) to contextualize risk severity and generate personalized "Why it matters to you" explanations.
-- **Document Type Detection:** The system first detects the document type to adapt its extraction and risk-flagging patterns to the specific legal domain.
-- **Inference Strategy:** We use `llama-3.3-70b-versatile` via Groq for high-speed, high-quality reasoning. The prompts enforce strict JSON output for structured UI rendering.
-- **Google Cloud Integrations:**
-  - **Firebase Hosting & Cloud Functions:** Provides a secure backend to hide API keys from the client and serve the React app statically.
-  - **Google Cloud Vision OCR:** Acts as a fallback for scanned documents when standard text extraction (`pdf-parse`/`mammoth`) yields insufficient text.
-  - **Web Speech API:** Used on the frontend for text-to-speech (TTS) accessibility without heavy backend dependencies, though Cloud TTS is a viable server-side alternative.
+## 🛠️ Tech Stack
 
-## 3. How the Solution Works
-1. **Upload:** User uploads a document and selects their role on the React frontend.
-2. **Extraction:** The file is sent via `POST` to the `/api/analyze` Cloud Function. The backend extracts text using `pdf-parse` or `mammoth` (falling back to Cloud Vision for scans).
-3. **Analysis:** The backend builds a secure prompt (with prompt-injection delimiters) and calls the Groq API.
-4. **Render:** The structured JSON response is rendered in a split-pane UI featuring a summary, risk cards, interactive Q&A, and a timeline.
-5. **Additional Endpoints:**
-   - `/api/analyze`: Main document parsing, summary, risk, and timeline generation.
-   - `/api/ask`: Grounded Q&A against the document text with citations.
-   - `/api/ocr`: Standalone OCR endpoint for scanned files.
-   - `/api/compare`: Side-by-side document comparison.
+- **Frontend**: React, Vite
+- **Backend**: Node.js, Firebase Cloud Functions (v2)
+- **AI Processing**: Groq API (High-speed LLM inference)
+- **Document Parsing**: `pdf-parse`, `mammoth`, Google Cloud Vision (fallback OCR)
 
-## 4. Assumptions Made
-- **[ASSUMPTION]** Max upload size is capped at 10MB to prevent function timeouts and excessive token usage.
-- **[ASSUMPTION]** We default to the "Tenant" persona, but leave other options available in the UI to demonstrate flexibility.
-- **[ASSUMPTION]** The Groq model name `llama-3.3-70b-versatile` is accurate and available at the time of building.
-- **[ASSUMPTION]** A static `.ics` file generation on the client-side is sufficient for timeline export, avoiding the complexity and OAuth requirements of direct Google Calendar integration.
-- **[ASSUMPTION]** Documents are processed entirely in-memory and discarded immediately after the request to maximize privacy and reduce storage costs.
+## 🚀 Getting Started (Local Development)
 
-## 5. Setup Instructions
 ### Prerequisites
-- Node.js 20+
+- Node.js (v20+)
 - Firebase CLI (`npm install -g firebase-tools`)
+- Groq API Key
 
-### Environment Variables
-Set the following secrets in Firebase (or in a `.env` file in the `functions` directory for local development):
-- `GROQ_API_KEY`
-- `GOOGLE_CLOUD_VISION_API_KEY`
+### 1. Clone & Install
+```bash
+# Install frontend dependencies
+npm install
 
-### Local Development
-1. Install dependencies:
-   ```bash
-   npm install
-   cd functions && npm install
-   ```
-2. Start the Firebase emulator for backend functions:
-   ```bash
-   npm run serve --prefix functions
-   ```
-3. Start the Vite frontend dev server (in a separate terminal):
-   ```bash
-   npm run dev
-   ```
+# Install backend dependencies
+cd functions
+npm install
+```
 
-### Deployment
-1. Build the frontend: `npm run build`
-2. Deploy to Firebase: `firebase deploy`
+### 2. Environment Variables
+Create a `.env` file in the root directory:
+```env
+GROQ_API_KEY=your_groq_api_key_here
+GOOGLE_CLOUD_VISION_API_KEY=your_optional_vision_key_here
+```
 
-## 6. Security Notes
-- **Prompt-Injection Defense:** All LLM calls wrap untrusted document text in strict `<<<DOCUMENT_START>>>` and `<<<DOCUMENT_END>>>` delimiters. The system prompt explicitly instructs the model to ignore any instructions found within the document boundaries, neutralizing attacks like "Ignore previous instructions."
-- **Zero Secrets in Repo:** All API keys are loaded from environment variables or Firebase Secret Manager. The frontend never possesses or transmits an API key.
-- **No Persistence by Default:** Documents are held in memory only during the Cloud Function execution lifecycle and are never written to disk or a database, ensuring maximum privacy for sensitive legal documents.
+### 3. Run the App
+Start the Firebase Emulator (Backend) and Vite Dev Server (Frontend) simultaneously:
+
+```bash
+# Terminal 1: Start Backend
+cd functions
+npm run serve
+
+# Terminal 2: Start Frontend
+npm run dev
+```
+Open `http://localhost:5173` in your browser.
+
+---
+
+## 🔒 Privacy Notice
+LegalLens is built for privacy. Uploaded files are streamed into memory, parsed, sent to the LLM for analysis, and immediately discarded. No databases are connected to the document upload pipeline.

@@ -244,7 +244,18 @@ function MainWorkspace({ data, role }) {
 
           {activeTab === 'next-steps' && (
             <div>
-              <p>Next Steps functionality coming soon.</p>
+              <h3>Recommended Next Steps</h3>
+              {data.nextSteps && data.nextSteps.length > 0 ? (
+                <ul style={{ paddingLeft: '1.5rem' }}>
+                  {data.nextSteps.map((step, idx) => (
+                    <li key={idx} style={{ marginBottom: '1rem', lineHeight: '1.5' }}>
+                      {step}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No specific next steps identified.</p>
+              )}
             </div>
           )}
           
@@ -253,13 +264,45 @@ function MainWorkspace({ data, role }) {
               <h3>Export Report</h3>
               <p>Select what to include in your export:</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '2rem' }}>
-                <label><input type="checkbox" defaultChecked /> Summary</label>
-                <label><input type="checkbox" defaultChecked /> Risks & Clauses</label>
-                <label><input type="checkbox" defaultChecked /> Timeline</label>
-                <label><input type="checkbox" defaultChecked /> Next Steps & Lawyer Prep</label>
+                <label><input type="checkbox" id="export-summary" defaultChecked /> Summary</label>
+                <label><input type="checkbox" id="export-risks" defaultChecked /> Risks & Clauses</label>
+                <label><input type="checkbox" id="export-timeline" defaultChecked /> Timeline</label>
+                <label><input type="checkbox" id="export-nextsteps" defaultChecked /> Next Steps & Lawyer Prep</label>
               </div>
               <button style={{ backgroundColor: 'var(--accent-color)', color: 'white' }} onClick={() => {
-                alert('Export functionality generating PDF/Text bundle...');
+                let exportText = `LegalLens Analysis Report\\nDocument Type: ${data.documentType || 'Unknown'}\\nRole: ${role}\\n\\n`;
+                
+                if (document.getElementById('export-summary').checked) {
+                  exportText += `--- SUMMARY ---\\n${data.summary?.standard || 'N/A'}\\n\\n`;
+                }
+                if (document.getElementById('export-risks').checked) {
+                  exportText += `--- RISKS ---\\n`;
+                  (data.risks || []).forEach(r => {
+                    exportText += `- ${r.clauseName} (${r.severity} Risk): ${r.explanation}\\n  Why it matters: ${r.whyItMatters}\\n\\n`;
+                  });
+                }
+                if (document.getElementById('export-timeline').checked) {
+                  exportText += `--- TIMELINE ---\\n`;
+                  (data.timeline || []).forEach(t => {
+                    exportText += `- ${t.dateOrCondition}: ${t.event} - ${t.description}\\n`;
+                  });
+                  exportText += `\\n`;
+                }
+                if (document.getElementById('export-nextsteps').checked) {
+                  exportText += `--- NEXT STEPS ---\\n`;
+                  (data.nextSteps || []).forEach(s => {
+                    exportText += `- ${s}\\n`;
+                  });
+                  exportText += `\\n`;
+                }
+                
+                const blob = new Blob([exportText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'LegalLens-Report.txt';
+                a.click();
+                URL.revokeObjectURL(url);
               }}>Export Document</button>
             </div>
           )}
