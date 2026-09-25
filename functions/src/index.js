@@ -1,7 +1,6 @@
 require("dotenv").config({ path: require("path").resolve(__dirname, "../../.env") });
 const { onRequest } = require("firebase-functions/v2/https");
 const logger = require("firebase-functions/logger");
-const cors = require("cors")({ origin: true });
 const Busboy = require("busboy");
 const { callGroq, wrapDocumentForPrompt, parseLLMJSON } = require("./groqClient");
 const { extractText } = require("./documentParser");
@@ -53,7 +52,7 @@ function parseMultipart(req) {
   });
 }
 
-exports.analyze = onRequest({ cors: true, maxInstances: 10, timeoutSeconds: 300 }, async (req, res) => {
+exports.analyze = onRequest({ maxInstances: 10, timeoutSeconds: 300, secrets: ["GROQ_API_KEY"] }, async (req, res) => {
   if (req.method !== "POST") {
     res.status(405).send("Method Not Allowed");
     return;
@@ -176,7 +175,7 @@ Output MUST be valid JSON matching this schema:
   }
 });
 
-exports.ask = onRequest({ cors: true, maxInstances: 10, timeoutSeconds: 300 }, async (req, res) => {
+exports.ask = onRequest({ maxInstances: 10, timeoutSeconds: 300, secrets: ["GROQ_API_KEY"] }, async (req, res) => {
   if (req.method !== "POST") {
     res.status(405).send("Method Not Allowed");
     return;
@@ -216,7 +215,7 @@ Output MUST be valid JSON matching this schema:
   }
 });
 
-exports.ocr = onRequest({ cors: true, maxInstances: 10, timeoutSeconds: 300 }, async (req, res) => {
+exports.ocr = onRequest({ maxInstances: 10, timeoutSeconds: 300, secrets: ["GROQ_API_KEY"] }, async (req, res) => {
   if (req.method !== "POST") {
     res.status(405).send("Method Not Allowed");
     return;
@@ -259,7 +258,7 @@ exports.ocr = onRequest({ cors: true, maxInstances: 10, timeoutSeconds: 300 }, a
   }
 });
 
-exports.compare = onRequest({ cors: true, maxInstances: 10, timeoutSeconds: 300 }, async (req, res) => {
+exports.compare = onRequest({ maxInstances: 10, timeoutSeconds: 300, secrets: ["GROQ_API_KEY"] }, async (req, res) => {
   if (req.method !== "POST") {
     res.status(405).send("Method Not Allowed");
     return;

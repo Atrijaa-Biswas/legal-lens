@@ -22,13 +22,10 @@ function App() {
     formData.append('role', selectedRole);
 
     try {
-      // In local dev, use the emulator URL. In prod, use relative or functions URL.
-      const baseUrl = window.location.hostname === 'localhost' 
-        ? 'http://127.0.0.1:5001/legal-lens-demo/us-central1' 
-        : '/api';
-      
-      // Note: for Firebase hosting rewrites, /api/analyze maps to analyze function
-      const endpoint = window.location.hostname === 'localhost' ? `${baseUrl}/analyze` : '/api/analyze';
+      // In local dev, use the emulator URL. In prod, use relative URL since hosting rewrites handle it.
+      const endpoint = window.location.hostname === 'localhost' 
+        ? 'http://127.0.0.1:5001/legal-lens-28e76/us-central1/analyze' 
+        : '/api/analyze';
 
       const response = await fetch(endpoint, {
         method: 'POST',

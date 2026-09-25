@@ -17,10 +17,9 @@ function MainWorkspace({ data, role }) {
     setAsking(true);
 
     try {
-      const baseUrl = window.location.hostname === 'localhost' 
-        ? 'http://127.0.0.1:5001/legal-lens-demo/us-central1' 
-        : '/api';
-      const endpoint = window.location.hostname === 'localhost' ? `${baseUrl}/ask` : '/api/ask';
+      const endpoint = window.location.hostname === 'localhost' 
+        ? 'http://127.0.0.1:5001/legal-lens-28e76/us-central1/ask' 
+        : '/api/ask';
 
       const response = await fetch(endpoint, {
         method: 'POST',
